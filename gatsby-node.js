@@ -1,3 +1,4 @@
+const path = require('path');
 const { documentToHtmlString } = require("@contentful/rich-text-html-renderer")
 const { getGatsbyImageResolver } = require("gatsby-plugin-image/graphql-utils")
 
@@ -610,4 +611,55 @@ exports.createSchemaCustomization = async ({ actions }) => {
       html: String! @richText
     }
   `)
+}
+
+exports.createPages = async ({ graphql, actions }) => {
+  const { createPage } = actions;
+  const blogIndex = path.resolve('src/templates/blog-index.js');
+  const blogPostTemplate = path.resolve('src/templates/blog-post.js');
+
+  const query = await graphql(`
+    query {
+      allContentfulBlogPost {
+        nodes {
+          contentful_id
+          slug
+          title
+          date
+          category
+          body {
+            raw
+          }
+          image {
+            id
+            alt
+            gatsbyImageData
+          }
+          excerpt {
+            excerpt
+          }
+        }
+      }
+    }
+  `);
+
+  const blogs = query.data?.allContentfulBlogPost?.nodes || [];
+
+  // Creating Blog Index
+  createPage({
+    path: 'blog-index-template',
+    component: blogIndex,
+    context: {
+      posts: blogs
+    }
+  });
+
+  blogs.forEach(blog => {
+    createPage({
+      path: `/blog-index-template/${blog.slug}`,
+      component: blogPostTemplate,
+      context: {...blog}
+    });
+  });
+
 }

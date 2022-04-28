@@ -12,52 +12,51 @@ import {
 } from "../components/ui"
 import { avatar as avatarStyle } from "../components/ui.css"
 import * as styles from "./blog-post.css"
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 
 export default function BlogPost(props) {
+  const blog = props.pageContext;
   return (
-    <Layout {...props} description={props.excerpt}>
+    <Layout {...props} description={blog.excerpt}>
       <Container>
         <Box paddingY={5}>
           <Heading as="h1" center>
-            {props.title}
+            {blog.title}
           </Heading>
           <Space size={4} />
-          {props.author && (
+          {blog.author && (
             <Box center>
               <Flex>
-                {props.author.avatar &&
-                  (!!props.author.avatar.gatsbyImageData ? (
+                {blog.author.avatar &&
+                  (!!blog.author.avatar.gatsbyImageData ? (
                     <Avatar
-                      {...props.author.avatar}
-                      image={props.author.avatar.gatsbyImageData}
+                      {...blog.author.avatar}
+                      image={blog.author.avatar.gatsbyImageData}
                     />
                   ) : (
                     <img
-                      src={props.author.avatar.url}
-                      alt={props.author.name}
+                      src={blog.author.avatar.url}
+                      alt={blog.author.name}
                       className={avatarStyle}
                     />
                   ))}
-                <Text variant="bold">{props.author.name}</Text>
+                <Text variant="bold">{blog.author.name}</Text>
               </Flex>
             </Box>
           )}
           <Space size={4} />
-          <Text center>{props.date}</Text>
+          <Text center>{blog.date}</Text>
           <Space size={4} />
-          {props.image && (
+          {blog.image && (
             <GatsbyImage
-              alt={props.image.alt}
-              image={props.image.gatsbyImageData}
+              alt={blog.image.alt}
+              image={blog.image.gatsbyImageData}
             />
           )}
           <Space size={5} />
-          <div
-            className={styles.blogPost}
-            dangerouslySetInnerHTML={{
-              __html: props.html,
-            }}
-          />
+          <div className={styles.blogPost}>
+            {documentToReactComponents(JSON.parse(blog.body?.raw))}
+          </div>
         </Box>
       </Container>
     </Layout>

@@ -38,7 +38,7 @@ function PostCard({ slug, image, title, excerpt, author, category, ...props }) {
 
 function PostCardSmall({ slug, image, title, category, ...props }) {
   return (
-    <BlockLink {...props} to={`/blog/${slug}`}>
+    <BlockLink {...props} to={`/blog-index-template/${slug}`}>
       {image && (
         <>
           <GatsbyImage alt={image.alt} image={image.gatsbyImageData} />
@@ -53,7 +53,7 @@ function PostCardSmall({ slug, image, title, category, ...props }) {
   )
 }
 
-export default function BlogIndex({ posts }) {
+export default function BlogIndex({ pageContext: { posts } }) {
   const featuredPosts = posts.filter((p) => p.category === "Featured")
   const regularPosts = posts.filter((p) => p.category !== "Featured")
 
