@@ -11,7 +11,7 @@ import {
   Avatar,
 } from "../../components/ui"
 import { avatar as avatarStyle } from "../../components/ui.css"
-import * as styles from "./blog-post.css"
+import * as styles from "./../../templates/blog-post.css"
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { graphql } from "gatsby"
 
